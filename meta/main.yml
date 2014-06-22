@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Mark Wolfe
+  description: Install buildbox agent
+  company: Ninja Blocks
+  license: MIT
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty
+
+  categories:
+    - packaging

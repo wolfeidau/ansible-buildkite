@@ -1,0 +1,35 @@
+- name: Add the buildbox user
+  user: name=buildbox comment="Buildbox User" system=yes home={{ buildbox_home }}
+
+- name: Register the current buildbox-agent version (if any)
+  command: /usr/bin/buildbox-agent -version
+  ignore_errors: yes
+  register: buildbox_app_version
+
+# buildbox_version: "0.2-beta.8"
+# buildbox_arch: "amd64:
+- name: Download the buildbox binaries
+  get_url: url=https://github.com/buildboxhq/buildbox-agent/releases/download/v{{ buildbox_version }}/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz dest=/tmp/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz
+  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
+
+- name: stop buildbox-agent
+  command: service buildbox-agent stop
+  ignore_errors: yes
+  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
+
+- name: Extract the buildbox-agent if it is not yet installed or if it is not the desired version
+  command: tar xvzf /tmp/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz -C /usr/bin
+  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
+
+- name: Configure defaults
+  template: src=buildbox.j2 dest=/etc/default/buildbox
+
+- name: Configure upstart
+  template: src=upstart.j2 dest=/etc/init/buildbox-agent.conf
+
+- name: Configure upstart
+  template: src=logrotate.j2 dest=/etc/logrotate.d/buildbox
+
+- name: start buildbox-agent
+  command: service buildbox-agent start
+  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version

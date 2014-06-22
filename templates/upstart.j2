@@ -1,0 +1,17 @@
+description "buildbox-agent"
+# buildbox-agent - The agent service for http://buildbox.io
+#
+# buildbox-agent
+
+start on (filesystem and net-device-up)
+stop on runlevel [!2345]
+
+# If the process quits unexpectadly trigger a respawn
+respawn
+
+script
+  . /etc/default/buildbox
+  exec start-stop-daemon --start --chuid $BUILDBOX_USER \
+    --make-pidfile --pidfile /var/run/buildbox.pid \
+    --exec /usr/bin/buildbox-agent -- start >> $LOG_FILE 2>&1
+end script
