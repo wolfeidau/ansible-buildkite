@@ -18,7 +18,7 @@
   when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
 
 - name: Extract the buildbox-agent if it is not yet installed or if it is not the desired version
-  command: tar xvzf /tmp/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz -C /usr/bin
+  command: tar xvzf /tmp/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz -C /usr/local/bin
   when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
 
 - name: Configure defaults
