@@ -1,6 +1,7 @@
 # ansible-buildbox
 
-Install buildbox-agent and configure it to run at startup.
+This is an ansible role which downloads and installs [buildbox](http://buildbox.io) agent,
+then configures it as a service. Currently it supports [ubuntu](http://ubuntu.com).
 
 # Role Variables
 
@@ -12,7 +13,7 @@ buildbox_token: ""
 buildbox_user: "buildbox"
 buildbox_home: "/var/lib/buildbox"
 buildbox_version: "0.2-beta.8"
-buildbox_arch: "amd64:
+buildbox_arch: "amd64"
 ```
 
 # License
