@@ -12,7 +12,7 @@ otherwise the agent will fail to start.
 buildbox_token: ""
 buildbox_user: "buildbox"
 buildbox_home: "/var/lib/buildbox"
-buildbox_version: "0.2-beta.8"
+buildbox_version: "0.2-beta.9"
 buildbox_arch: "amd64"
 ```
 
