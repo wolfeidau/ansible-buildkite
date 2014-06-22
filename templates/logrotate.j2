@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-/var/log/buildbox.log {
+/var/log/buildbox-agent.log {
     daily
     missingok
     notifempty
@@ -8,5 +8,4 @@
     compress
     # Until buildbox accepts HUP signals for logrotate this will do the job.
     copytruncate
-    endscript
 }

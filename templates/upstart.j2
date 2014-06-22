@@ -1,6 +1,8 @@
 description "buildbox-agent"
 # buildbox-agent - The agent service for http://buildbox.io
 #
+# {{ ansible_managed }}
+#
 # buildbox-agent
 
 start on (filesystem and net-device-up)
@@ -13,5 +15,6 @@ script
   . /etc/default/buildbox
   exec start-stop-daemon --start --chuid $BUILDBOX_USER \
     --make-pidfile --pidfile /var/run/buildbox.pid \
-    --exec /usr/bin/buildbox-agent -- start >> $LOG_FILE 2>&1
+    --exec /usr/bin/buildbox-agent -- start \
+    --access-token $BUILDBOX_TOKEN >> /var/log/buildbox-agent.log 2>&1
 end script
