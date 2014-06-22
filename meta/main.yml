@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Mark Wolfe
-  description: Install buildbox agent
+  description: Installs and configures the buildbox agent.
   company: Ninja Blocks
   license: MIT
 
