@@ -8,12 +8,20 @@ then configures it as a service. Currently it supports [ubuntu](http://ubuntu.co
 These are the configurable attributes of the role, note you MUST configure the `buildbox_token`
 otherwise the agent will fail to start.
 
-```
+```yaml
 buildbox_token: ""
 buildbox_user: "buildbox"
 buildbox_home: "/var/lib/buildbox"
 buildbox_version: "0.2-beta.9"
 buildbox_arch: "amd64"
+```
+
+# Example Playbook
+
+```yaml
+- hosts: servers
+  roles:
+     - { role: wolfeidau.buildbox, buildbox_token: "whatever" }
 ```
 
 # License
