@@ -2,7 +2,7 @@
   user: name=buildbox comment="Buildbox User" system=yes home={{ buildbox_home }}
 
 - name: Register the current buildbox-agent version (if any)
-  command: /usr/bin/buildbox-agent -version
+  command: /usr/local/bin/buildbox-agent -version
   ignore_errors: yes
   register: buildbox_app_version
 
