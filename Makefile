@@ -4,5 +4,4 @@ deps:
 	pip install ansible
 
 smoketest:
-	echo localhost > inventory
-	ansible-playbook -i inventory --syntax-check --list-tasks role.yml
+	ansible-playbook --syntax-check --list-tasks role.yml

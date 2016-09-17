@@ -1,0 +1,29 @@
+---
+molecule:
+  ignore_paths:
+    - .git
+    - .vagrant
+    - .molecule
+    - venv
+
+ansible:
+  playbook: playbook.yml
+  group_vars:
+      buildkite:
+        - buildkite_token: "whatever"
+
+docker:
+  containers:
+  - name: buildkite-xenial-01
+    ansible_groups:
+        - buildkite
+    image: solita/ubuntu-systemd
+    image_version: 16.04
+  # - name: buildkite-trusty-02
+  #   ansible_groups:
+  #       - buildkite
+  #   image: ubuntu
+  #   image_version: trusty
+
+verifier:
+  name: testinfra

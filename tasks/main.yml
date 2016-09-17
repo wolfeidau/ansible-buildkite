@@ -1,41 +1,26 @@
-- name: Add the buildbox user
-  user: name=buildbox comment="Buildbox User" system=yes home={{ buildbox_home }}
+---
+- name: Ensure the system can use the HTTPS transport for APT
+  stat:
+    path: /usr/lib/apt/methods/https
+  register: apt_https_transport
 
-- name: Register the current buildbox-agent version (if any)
-  command: /usr/local/bin/buildbox-agent -version
-  ignore_errors: yes
-  register: buildbox_app_version
+- name: Install HTTPS transport for APT
+  apt:
+    pkg: apt-transport-https
+    state: installed
+  when: not apt_https_transport.stat.exists
 
-# buildbox_version: "0.2-beta.8"
-# buildbox_arch: "amd64:
-- name: Download the buildbox binaries
-  get_url: url=https://github.com/buildboxhq/buildbox-agent/releases/download/v{{ buildbox_version }}/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz dest=/tmp/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz
-  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
+- name: Add the buildkite apt repository
+  apt_repository: repo='deb https://apt.buildkite.com/buildkite-agent stable main' state=present filename='buildkite-agent'
 
-- name: stop buildbox-agent
-  command: service buildbox-agent stop
-  ignore_errors: yes
-  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
+- name: Add the buildkite apt key
+  apt_key: keyserver=keyserver.ubuntu.com id=32A37959C2FA5C3C99EFBC32A79206696452D198
 
-- name: Extract the buildbox-agent if it is not yet installed or if it is not the desired version
-  command: tar xvzf /tmp/buildbox-agent-linux-{{ buildbox_arch }}.tar.gz -C /usr/local/bin
-  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
+- name: Install buildkite agent package
+  apt: name=buildkite-agent state=present update_cache=true allow_unauthenticated=true
 
-- name: Configure defaults
-  template: src=buildbox.j2 dest=/etc/default/buildbox
+- name: Configure buildkite agent
+  lineinfile: dest=/etc/buildkite-agent/buildkite-agent.cfg regexp=^key= line="key={{ buildkite_token }}"
 
-- name: Configure upstart
-  template: src=upstart.j2 dest=/etc/init/buildbox-agent.conf
-
-- name: Configure upstart
-  template: src=logrotate.j2 dest=/etc/logrotate.d/buildbox
-
-- name: Configure boostrap file
-  file: path=/var/lib/buildbox/.buildbox owner=buildbox group=buildbox mode=0755 state=directory
-
-- name: Configure boostrap file
-  template: src=bootstrap.j2 dest=/var/lib/buildbox/.buildbox/bootstrap.sh
-
-- name: start buildbox-agent
-  command: service buildbox-agent start
-  when: buildbox_app_version|failed or buildbox_app_version.stdout != buildbox_version
+- name: Start buildkite agent service
+  service: name=buildkite-agent state=started enabled=yes

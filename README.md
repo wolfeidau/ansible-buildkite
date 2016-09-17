@@ -1,19 +1,14 @@
-# ansible-buildbox
+# ansible-buildkite
 
-This is an ansible role which downloads and installs [buildbox](http://buildbox.io) agent,
+This is an [ansible](https://docs.ansible.com/) role which downloads and installs [buildkite](https://buildkite.com) agent,
 then configures it as a service. Currently it supports [ubuntu](http://ubuntu.com).
 
 # Role Variables
 
-These are the configurable attributes of the role, note you MUST configure the `buildbox_token`
-otherwise the agent will fail to start.
+These are the configurable attributes of the role, note you MUST configure the `buildkite_token` otherwise the agent will fail to start.
 
 ```yaml
-buildbox_token: ""
-buildbox_user: "buildbox"
-buildbox_home: "/var/lib/buildbox"
-buildbox_version: "0.2-beta.9"
-buildbox_arch: "amd64"
+buildkite_token: ""
 ```
 
 # Example Playbook
@@ -21,7 +16,7 @@ buildbox_arch: "amd64"
 ```yaml
 - hosts: servers
   roles:
-     - { role: wolfeidau.buildbox, buildbox_token: "whatever" }
+     - { role: wolfeidau.buildbox, buildkite_token: "whatever" }
 ```
 
 # License
