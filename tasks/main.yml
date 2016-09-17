@@ -20,7 +20,6 @@
   apt: name=buildkite-agent state=present update_cache=true allow_unauthenticated=true
 
 - name: Configure buildkite agent
-  lineinfile: dest=/etc/buildkite-agent/buildkite-agent.cfg regexp=^key= line="key={{ buildkite_token }}"
-
-- name: Start buildkite agent service
-  service: name=buildkite-agent state=started enabled=yes
+  lineinfile: dest=/etc/buildkite-agent/buildkite-agent.cfg regexp=^token= line="token={{ buildkite_token }}"
+  notify:
+    - restart buildkite-agent
